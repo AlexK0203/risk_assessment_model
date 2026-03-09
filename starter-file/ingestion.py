@@ -8,7 +8,7 @@ from datetime import datetime
 
 
 #############Load config.json and get input and output paths
-with open('config.json','r') as f:
+with open('./starter-file/config.json','r') as f:
     config = json.load(f) 
 
 input_folder_path = config['input_folder_path']
@@ -39,11 +39,15 @@ def merge_multiple_dataframe():
             # 1. Combine and remove Duplicates
             final_df = pd.concat(df_list).drop_duplicates()
 
-            # 2. Save CSV
+            # 2. Create output folder
+            if not os.path.exists(output_folder_path):
+                os.makedirs(output_folder_path)
+
+            # 3. Save CSV
             csv_path = os.path.join(output_folder_path, 'finaldata.csv')
             final_df.to_csv(csv_path, index=False)
             
-            # 3. Save Record
+            # 4. Save Record
             txt_path = os.path.join(output_folder_path, 'ingestedfiles.txt')
             with open(txt_path, 'w') as f:
                 f.write('\n'.join(ingested_filenames))
