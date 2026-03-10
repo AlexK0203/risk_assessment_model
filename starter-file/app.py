@@ -18,6 +18,7 @@ dataset_csv_path = os.path.join(config['output_folder_path'])
 
 prediction_model = None
 
+root_path = os.path.dirname(os.path.abspath(__file__))
 
 #######################Prediction Endpoints
 @app.route("/prediction", methods=['POST','OPTIONS'])
@@ -26,7 +27,7 @@ def predict():
     # Get data from body
     input_data = request.json
     file_path = input_data['filepath']
-    dataset_df = pd.read_csv(file_path)
+    dataset_df = pd.read_csv(os.path.join(root_path, file_path))
     prediction = model_predictions(dataset_df)
     return jsonify(prediction) #prediction_json #add return value for prediction outputs
 
