@@ -12,18 +12,18 @@ with open('./starter-file/config.json','r') as f:
     config = json.load(f) 
 
 ##################Function to get model predictions
-def model_predictions():
+def model_predictions(dataset_df):
     #read the deployed model and a test dataset, calculate predictions
 
     prod_model = os.path.join(config['prod_deployment_path'], 'trainedmodel.pkl') 
-    dataset_path = os.path.join(config['output_folder_path'], 'finaldata.csv')
+
 
     with open(prod_model, 'rb') as f:
         model = pickle.load(f)
 
-    df = pd.read_csv(dataset_path)
 
-    X = df.drop(['corporation', 'exited'], axis=1, errors='ignore')
+
+    X = dataset_df.drop(['corporation', 'exited'], axis=1, errors='ignore')
     predictions = model.predict(X)
 
     return predictions.tolist() #return value should be a list containing all predictions
@@ -98,7 +98,9 @@ def outdated_packages_list():
 
 
 if __name__ == '__main__':
-    model_predictions()
+    dataset_path = os.path.join(config['output_folder_path'], 'finaldata.csv')
+    dataset_df = pd.read_csv(dataset_path)
+    model_predictions(dataset_df)
     dataframe_summary()
     missing_data()
     execution_time()
